@@ -1,5 +1,6 @@
 package com.learn.security.auth;
 
+import com.learn.security.user.Role;
 import lombok.Builder;
 
 @Builder
@@ -10,6 +11,8 @@ public record RegistrationRequest(
 
         String email,
 
-        String password
+        String password,
+
+        Role role
 ) {
 }

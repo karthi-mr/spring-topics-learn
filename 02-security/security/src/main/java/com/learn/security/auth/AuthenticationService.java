@@ -1,7 +1,6 @@
 package com.learn.security.auth;
 
 import com.learn.security.config.JwtService;
-import com.learn.security.user.Role;
 import com.learn.security.user.User;
 import com.learn.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class AuthenticationService {
                 .lastname(request.lastname())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
+                .role(request.role())
                 .build();
         this.userRepository.save(user);
         var jwtToken = this.jwtService.generateToken(user);
