@@ -32,7 +32,17 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers(
-                                        "/api/v1/auth/**"
+                                        "/api/v1/auth/**",
+                                        "/v2/api-docs",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
+                                        "/webjars/**",
+                                        "/swagger-ui.html"
                                 )
                                 .permitAll()
                                 .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
