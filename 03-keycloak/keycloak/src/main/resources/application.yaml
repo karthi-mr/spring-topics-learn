@@ -10,3 +10,13 @@ spring:
 
 server:
   port: 8081
+
+
+jwt:
+  auth:
+    convertor:
+      resource-id: my-client-rest-api
+      principle-attribute: preferred_username
+logging:
+  level:
+    root: debug
