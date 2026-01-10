@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: SpringAICode
+  config:
+    import: optional:application-secrets.yaml
+
+server:
+  port: 8088
