@@ -3,6 +3,11 @@ spring:
     name: SpringAICode
   config:
     import: optional:application-secrets.yaml
+  ai:
+    openai:
+      embedding:
+        options:
+          model: text-embedding-3-large
 
 server:
   port: 8088
