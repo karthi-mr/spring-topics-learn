@@ -7,7 +7,20 @@ spring:
     openai:
       embedding:
         options:
-          model: text-embedding-3-large
+          model: text-embedding-ada-002
+  datasource:
+    url: jdbc:postgresql://localhost:5433/vector_store
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  main:
+    allow-bean-definition-overriding: true
+  sql:
+    init:
+      schema-locations: classpath:init/schema.sql
+      mode: always
+
+
 
 server:
   port: 8088
