@@ -1,9 +1,10 @@
 package com.preflearn.SpringAICode;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -21,9 +22,10 @@ import java.util.Map;
 @RequestMapping("api")
 public class OpenAIController {
 
-    private ChatClient chatClient;
-    private ChatMemory chatMemory;
-    private EmbeddingModel embeddingModel;
+    private final ChatClient chatClient;
+    private final ChatMemory chatMemory;
+    private final EmbeddingModel embeddingModel;
+    private final ChatModel chatModel;
 
     @Autowired
     private VectorStore vectorStore;
@@ -32,11 +34,10 @@ public class OpenAIController {
         this.chatClient = ChatClient.create(chatModel);
     } */
 
-    public OpenAIController(ChatClient.Builder builder, EmbeddingModel embeddingModel) {
+    public OpenAIController(ChatClient.Builder builder, ChatModel chatModel, EmbeddingModel embeddingModel) {
+        this.chatModel = chatModel;
         this.chatMemory = MessageWindowChatMemory.builder().build();
-        this.chatClient = builder
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
-                .build();
+        this.chatClient = ChatClient.builder(chatModel).build();
         this.embeddingModel = embeddingModel;
     }
 
@@ -112,5 +113,20 @@ public class OpenAIController {
     public List<Document> getProducts(@RequestParam String text) {
         // return vectorStore.similaritySearch(text);
         return vectorStore.similaritySearch(SearchRequest.builder().query(text).topK(2).build());
+    }
+
+    @PostMapping("/ask")
+    public String getAnswerWithRag(@RequestParam String query) {
+
+        // String response = chatClient.call(message);
+//        SearchRequest searchRequest = SearchRequest.builder()
+//                .similarityThreshold(0.8d)
+//                .topK(6)
+//                .build();
+        return chatClient
+                .prompt(query)
+                .advisors(QuestionAnswerAdvisor.builder(vectorStore).build())
+                .call()
+                .content();
     }
 }
